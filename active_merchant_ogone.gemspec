@@ -46,5 +46,8 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<activemerchant>, [">= 1.4.2"])
   end
+
+  s.add_development_dependency 'actionpack', '2.3.11'
+  s.add_development_dependency 'activesupport', '2.3.11'
 end
 
