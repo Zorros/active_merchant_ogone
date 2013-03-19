@@ -45,7 +45,7 @@ module ActiveMerchant #:nodoc:
                               sort_by {|k, v| k.upcase }.
                               collect{|key, value| "#{key.upcase}=#{value}#{signature}"}.join
 
-          Rails.logger.error("Ogone datastring (OUT): #{datastring}")
+          Rails.logger.fatal("Ogone datastring (OUT): #{datastring}")
 
           Digest::SHA1.hexdigest(datastring).upcase
         end
@@ -56,7 +56,7 @@ module ActiveMerchant #:nodoc:
                               sort_by {|k, v| INBOUND_ENCRYPTED_VARIABLES.index(k.upcase) }.
                               collect {|key, value| "#{key.upcase}=#{value}#{signature}"}.join
 
-          Rails.logger.error("Ogone datastring (IN): #{datastring}")
+          Rails.logger.fatal("Ogone datastring (IN): #{datastring}")
 
           Digest::SHA1.hexdigest(datastring).upcase
         end
