@@ -41,20 +41,31 @@ module ActiveMerchant #:nodoc:
 
         def self.outbound_message_signature(fields, signature=nil)
           signature ||= self.outbound_signature
-          datastring = fields.select {|k, v| !v.blank? }.
-                              sort_by {|k, v| k.upcase }.
-                              collect{|key, value| "#{key.upcase}=#{value}"}.join
+          keys = ['orderID','amount','currency','PSPID']
+          datastring = keys.collect{ |key| fields[key] }.join('')
+
+          # datastring = fields.select {|k, v| !v.blank? }.
+          #                     sort_by {|k, v| k.upcase }.
+          #                     collect{|key, value| "#{key.upcase}=#{value}"}.join
+
           datastring += signature
+          Rails.logger.debug("Ogone: #{datastring}")
 
           Digest::SHA1.hexdigest(datastring).upcase
+
         end
 
         def self.inbound_message_signature(fields, signature=nil)
           signature ||= self.inbound_signature
-          datastring = fields.select  {|k, v| !v.blank? && INBOUND_ENCRYPTED_VARIABLES.include?(k.upcase) }.
-                              sort_by {|k, v| INBOUND_ENCRYPTED_VARIABLES.index(k.upcase) }.
-                              collect {|key, value| "#{key.upcase}=#{value}"}.join
+          keys = ['orderID','currency','amount','PM','ACCEPTANCE','STATUS','CARDNO','PAYID','NCERROR','BRAND']
+          datastring = keys.collect{ |key| fields[key] }.join('')
+
+          # datastring = fields.select  {|k, v| !v.blank? && INBOUND_ENCRYPTED_VARIABLES.include?(k.upcase) }.
+          #                     sort_by {|k, v| INBOUND_ENCRYPTED_VARIABLES.index(k.upcase) }.
+          #                     collect {|key, value| "#{key.upcase}=#{value}"}.join
+
           datastring += signature
+          Rails.logger.debug("Ogone: #{datastring}")
 
           Digest::SHA1.hexdigest(datastring).upcase
         end
