@@ -43,9 +43,7 @@ module ActiveMerchant #:nodoc:
           signature ||= self.outbound_signature
           datastring = fields.select {|k, v| !v.blank? }.
                               sort_by {|k, v| k.upcase }.
-                              collect{|key, value| "#{key.upcase}=#{value}#{signature}"}.join
-
-          Rails.logger.fatal("Ogone datastring (OUT): #{datastring}")
+                              collect{|key, value| "#{key.upcase}=#{value}"}.join
 
           Digest::SHA1.hexdigest(datastring).upcase
         end
@@ -54,9 +52,7 @@ module ActiveMerchant #:nodoc:
           signature ||= self.inbound_signature
           datastring = fields.select  {|k, v| !v.blank? && INBOUND_ENCRYPTED_VARIABLES.include?(k.upcase) }.
                               sort_by {|k, v| INBOUND_ENCRYPTED_VARIABLES.index(k.upcase) }.
-                              collect {|key, value| "#{key.upcase}=#{value}#{signature}"}.join
-
-          Rails.logger.fatal("Ogone datastring (IN): #{datastring}")
+                              collect {|key, value| "#{key.upcase}=#{value}"}.join
 
           Digest::SHA1.hexdigest(datastring).upcase
         end
