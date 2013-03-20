@@ -44,6 +44,7 @@ module ActiveMerchant #:nodoc:
           datastring = fields.select {|k, v| !v.blank? }.
                               sort_by {|k, v| k.upcase }.
                               collect{|key, value| "#{key.upcase}=#{value}"}.join
+          datastring += signature
 
           Digest::SHA1.hexdigest(datastring).upcase
         end
@@ -53,6 +54,7 @@ module ActiveMerchant #:nodoc:
           datastring = fields.select  {|k, v| !v.blank? && INBOUND_ENCRYPTED_VARIABLES.include?(k.upcase) }.
                               sort_by {|k, v| INBOUND_ENCRYPTED_VARIABLES.index(k.upcase) }.
                               collect {|key, value| "#{key.upcase}=#{value}"}.join
+          datastring += signature
 
           Digest::SHA1.hexdigest(datastring).upcase
         end
